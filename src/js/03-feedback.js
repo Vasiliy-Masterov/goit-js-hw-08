@@ -1,16 +1,10 @@
 import throttle from 'lodash.throttle';
 
 const form = document.querySelector(".feedback-form");
-const inputContent = form.querySelector("input");
-const textArea = form.querySelector("textarea")
+const inputEmailEl = form.querySelector('[name="email"]');
+const inputMessageEl = form.querySelector('[name="message"]');
 const STORAGE_KEY = "feedback-form-state";
 let savedFeedBackDate = JSON.parse(localStorage.getItem(STORAGE_KEY));
-const email = "";
-const message = "";
-const feedBackDate = {
-    email,
-    message,
-  };
 
 examinationStorage();
 form.addEventListener("input", throttle(handleInput,500));
@@ -18,14 +12,19 @@ form.addEventListener("submit", handleSubmit);
 
 function examinationStorage() {
     if (savedFeedBackDate) {
-        inputContent.value = savedFeedBackDate.email;
-        textArea.value = savedFeedBackDate.message;
+        inputEmailEl.value = savedFeedBackDate.email;
+        inputMessageEl.value = savedFeedBackDate.message;
       return ;
     }
 }
 
 function handleInput(event) {
-  feedBackDate[event.target.name] = event.target.value;
+  const email = inputEmailEl.value;
+  const message = inputMessageEl.value;
+  const feedBackDate = {
+    email,
+    message,
+  };
   localStorage.setItem(STORAGE_KEY, JSON.stringify(feedBackDate));
 }
 
@@ -38,5 +37,5 @@ function handleSubmit(event) {
     }; 
     console.log(formDate);
     localStorage.removeItem(STORAGE_KEY);
-    event.currentTarget.reset();
+    form.reset();
 }
